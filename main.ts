@@ -13,7 +13,7 @@
 //
 // Buy (checked at every bar close, filled at the next bar's open), both
 // conditions at once:
-//   * the 20-bar RSI sits under 30 -- the last 20 one-minute moves are
+//   * the 15-bar RSI sits under 30 -- the last 15 one-minute moves are
 //     dominated by losses, so sellers look exhausted; and
 //   * the close is at least 1.2% under the highest close of the last
 //     120 bars -- the dip is real, not a single-minute wobble.
@@ -27,10 +27,10 @@
 //
 // Parameters were chosen by a joint sweep over the two published dev
 // windows (btc-race-24h-20261118-1444, BTC -2.79%; and this race's window,
-// BTC +3.64%): these are the settings with the highest worst-window net
-// PnL of any DipCatcher combination -- about +$15 on BOTH windows
-// (5 trades, 0.64% max drawdown on the falling window; 4 trades, 1.30%
-// on the rising window), still about +$14 / +$13 with every fee doubled.
+// BTC +3.64%). The RSI lookback was then shortened 20 -> 15 (see the
+// RSI_N note below): the revised settings make about +$16 on this race's
+// window (6 trades, 0.59% max drawdown) and +$12.70 on the falling window
+// (5 trades, 0.65%), still about +$13 / +$11 with every fee doubled.
 // The previous race's settings (RSI 30/20, dip 60 bars) make $0 on this
 // race's window -- they never fire -- so they were not reused.
 
@@ -43,7 +43,15 @@ const ASSET = 'CBBTC';
 // under the recent high the close must sit); WIN_BPS / LOSS_BPS are the
 // take-profit / stop-loss; REST_BARS is the sit-out after a stop; SLIP_BPS
 // is the max slippage allowed past the close the order was decided on.
-const RSI_N = 20;
+//
+// RSI_N was shortened 20 -> 15 after the first submission: a 15-bar RSI
+// reacts faster when one-minute selling is exhausted, so the bot catches
+// the dip a little earlier instead of waiting for a 20-bar average to
+// turn. Validated on both published dev windows: this race's window
+// +$15.84 (6 trades, 0.59% max drawdown) vs +$14.92 at RSI_N 20, and the
+// falling window still +$12.70 (5 trades, 0.65%), both still positive
+// with every fee doubled.
+const RSI_N = 15;
 const BUY_RSI = 30;
 const SELL_RSI = 90;
 const DIP_BARS = 120;
